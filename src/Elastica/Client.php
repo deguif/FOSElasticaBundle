@@ -69,9 +69,10 @@ class Client extends BaseClient
         }
 
         if (isset($responseData['took']) && isset($responseData['hits'])) {
-            $this->logQuery($path, $method, $data, $query, $response->getQueryTime(), $response->getEngineTime(), $responseData['hits']['total']);
+            $isAccurate = ($responseData['hits']['total']['relation'] ?? 'eq') === 'eq';
+            $this->logQuery($path, $method, $data, $query, $response->getQueryTime(), $response->getEngineTime(), $responseData['hits']['total']['value'], $isAccurate);
         } else {
-            $this->logQuery($path, $method, $data, $query, $response->getQueryTime(), 0, 0);
+            $this->logQuery($path, $method, $data, $query, $response->getQueryTime(), 0, 0, true);
         }
 
         if ($this->stopwatch) {
@@ -122,8 +123,9 @@ class Client extends BaseClient
      * @param int    $queryTime
      * @param int    $engineMS
      * @param int    $itemCount
+     * @param bool   $itemCountIsAccurate
      */
-    private function logQuery($path, $method, $data, array $query, $queryTime, $engineMS = 0, $itemCount = 0): void
+    private function logQuery($path, $method, $data, array $query, $queryTime, $engineMS = 0, $itemCount = 0, $itemCountIsAccurate = true): void
     {
         if (!$this->_logger or !$this->_logger instanceof ElasticaLogger) {
             return;
@@ -140,6 +142,6 @@ class Client extends BaseClient
 
         /** @var ElasticaLogger $logger */
         $logger = $this->_logger;
-        $logger->logQuery($path, $method, $data, $queryTime, $connectionArray, $query, $engineMS, $itemCount);
+        $logger->logQuery($path, $method, $data, $queryTime, $connectionArray, $query, $engineMS, $itemCount, $itemCountIsAccurate);
     }
 }

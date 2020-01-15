@@ -62,8 +62,9 @@ class ElasticaLogger extends AbstractLogger
      * @param array  $query      Arguments
      * @param int    $engineTime
      * @param int    $itemCount
+     * @param bool   $itemCountIsAccurate
      */
-    public function logQuery($path, $method, $data, $queryTime, $connection = [], $query = [], $engineTime = 0, $itemCount = 0)
+    public function logQuery($path, $method, $data, $queryTime, $connection = [], $query = [], $engineTime = 0, $itemCount = 0, $itemCountIsAccurate = true)
     {
         $executionMS = $queryTime * 1000;
 
@@ -90,6 +91,7 @@ class ElasticaLogger extends AbstractLogger
                 'connection' => $connection,
                 'queryString' => $query,
                 'itemCount' => $itemCount,
+                'itemCountIsAccurate' => $itemCountIsAccurate,
                 'backtrace' => $e->getTraceAsString(),
             ];
         }

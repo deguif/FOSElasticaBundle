@@ -112,7 +112,7 @@
                             <strong>Path</strong>: {{ query.path }}<br />
                             <strong>Query</strong>: {{ query.queryString|url_encode }}<br />
                             <strong>Method</strong>: {{ query.method }} ({{ query.connection.transport }} on {{ query.connection.host }}:{{ query.connection.port }})<br />
-                            <strong>Item count</strong>: {{ query.itemCount }}<br />
+                            <strong>Item count</strong>: {{ (query.itemCountIsAccurate ? '' : '>= ') ~ query.itemCount }}<br />
 
                             <a href="#" class="sf-toggle link-inverse" data-toggle-selector="#formatted-query-{{ key }}" data-toggle-alt-content="Hide formatted query">View formatted query</a>
 
